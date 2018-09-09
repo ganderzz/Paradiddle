@@ -7,14 +7,15 @@ const OUTPUT_PATH = path.resolve("dist");
 
 module.exports = {
   entry: {
-    vendor: ["react", "react-dom", "react-redux", "redux"],
+    vendor: ["react", "react-dom"],
+    style: ["@blueprintjs/core/lib/css/blueprint.css"],
     main: ["babel-polyfill", path.resolve(ROOT_DIR, "src", "index.tsx")],
   },
   output: {
     path: OUTPUT_PATH,
     publicPath: "./",
     filename: "[name].[hash].js",
-    pathinfo: false
+    pathinfo: false,
   },
   context: ROOT_DIR,
   resolve: {
@@ -30,6 +31,15 @@ module.exports = {
       {
         test: /.(ts|tsx)$/,
         loader: ["babel-loader", "ts-loader"],
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.worker\.js$/,
+        loader: "worker-loader",
         exclude: /node_modules/,
       },
     ],
