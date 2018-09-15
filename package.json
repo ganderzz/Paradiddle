@@ -1,7 +1,7 @@
 {
-  "name": "react-redux-boiler",
+  "name": "paradiddle",
   "version": "2.0.3",
-  "description": "Boilerplate for react, redux, and typescript",
+  "description": "Drummer Tool",
   "main": "./src/index.tsx",
   "scripts": {
     "start": "webpack-dev-server --config=webpack/webpack.development.config.js --mode=development",
@@ -18,7 +18,6 @@
   "dependencies": {
     "@blueprintjs/core": "^3.5.1",
     "@reach/router": "^1.1.1",
-    "@types/node": "^10.9.4",
     "babel-polyfill": "^6.26.0",
     "react": "^16.5.0",
     "react-dom": "^16.5.0"
@@ -27,6 +26,7 @@
     "@types/jest": "^23.3.2",
     "@types/react": "^16.4.13",
     "@types/react-dom": "^16.0.7",
+    "@types/node": "^10.9.4",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",

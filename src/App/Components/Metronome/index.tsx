@@ -15,11 +15,11 @@ import {
 } from "./constants";
 
 class Metronome extends React.Component<any, any> {
-  ticksPerBeat;
-  timerWorker;
-  audioContext;
-  nextNoteTime;
-  currentBeat;
+  private ticksPerBeat;
+  private timerWorker;
+  private audioContext;
+  private nextNoteTime = 0;
+  private currentBeat = 1;
 
   constructor(props) {
     super(props);
@@ -37,20 +37,20 @@ class Metronome extends React.Component<any, any> {
     this.timerWorker = new metronomeWorker();
     this.audioContext = new ((window as any).AudioContext ||
       (window as any).webkitAudioContext)();
-    this.nextNoteTime = 0;
-    this.currentBeat = 0;
 
     this.state = {
       beat: 0,
       subBeat: 0,
       playing: this.props.autoplay === true,
-      beatsPerMeasure: this.props.beatsPerMeasure,
       subdivision: this.props.subdivision,
     };
   }
 
   public componentDidUpdate(prevProps, prevState) {
-    if (prevProps.beatsPerMeasure !== this.props.beatsPerMeasure) {
+    if (
+      prevProps.beatsPerMeasure !== this.props.beatsPerMeasure ||
+      prevProps.subdivision !== this.props.subdivision
+    ) {
       this.ticksPerBeat =
         this.props.beatsPerMeasure % 3 === 0 || this.props.subdivision % 3 === 0
           ? TICKS_PER_BEAT_TERNARY
@@ -83,7 +83,7 @@ class Metronome extends React.Component<any, any> {
 
       const secondsPerBeat = SECONDS_IN_MINUTE / this.props.tempo;
       this.nextNoteTime +=
-        (this.state.beatsPerMeasure / this.ticksPerBeat) * secondsPerBeat;
+        (this.props.beatsPerMeasure / this.ticksPerBeat) * secondsPerBeat;
       this.currentBeat++;
 
       if (this.currentBeat === this.ticksPerBeat) {
@@ -92,21 +92,20 @@ class Metronome extends React.Component<any, any> {
     }
   };
 
-  tick = (beat, time) => {
+  private tick = (beat, time) => {
     const isFirstBeat = beat === 0;
     const isQuarterBeat =
-      beat % (this.ticksPerBeat / this.state.beatsPerMeasure) === 0;
+      beat % (this.ticksPerBeat / this.props.beatsPerMeasure) === 0;
     const isTripletBeat =
       this.ticksPerBeat === TICKS_PER_BEAT_TERNARY &&
-      beat % (this.ticksPerBeat / this.state.beatsPerMeasure) !== 0;
+      beat % (this.ticksPerBeat / this.props.beatsPerMeasure) !== 0;
     const isEighthBeat =
-      beat % (this.ticksPerBeat / (this.state.beatsPerMeasure * 2)) === 0;
+      beat % (this.ticksPerBeat / (this.props.beatsPerMeasure * 2)) === 0;
 
     let playTick = false;
 
     const osc = this.audioContext.createOscillator();
     const gainNode = this.audioContext.createGain();
-    gainNode.gain.value = 1;
     osc.connect(gainNode);
     gainNode.connect(this.audioContext.destination);
 
@@ -184,7 +183,7 @@ class Metronome extends React.Component<any, any> {
       this.setState(
         state => ({
           beat:
-            state.beat === this.state.beatsPerMeasure ? 1 : state.beat + 1 || 1,
+            state.beat === this.props.beatsPerMeasure ? 1 : state.beat + 1 || 1,
         }),
         () => {
           this.props.onTick(this.state);
@@ -270,7 +269,7 @@ class Metronome extends React.Component<any, any> {
     beatsPerMeasure: 4,
     subdivision: 1,
     beatFrequency: 880,
-    beatVolume: 1,
+    beatVolume: 0.75,
     subdivisionFrequency: 440,
     subdivisionVolume: 0.5,
     autoplay: false,

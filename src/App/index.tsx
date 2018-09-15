@@ -16,13 +16,14 @@ export default class App extends React.Component {
                 🥁 Paradiddle
               </Link>
             </Navbar.Heading>
+
             <Navbar.Divider />
 
             <Link {...{ to: "flashcards", style: { color: "#FFF" } }}>
               Flash Cards
             </Link>
             <Link
-              {...{ to: "metronome", style: { color: "#FFF", marginLeft: 10 } }}
+              {...{ to: "metronome", style: { color: "#FFF", marginLeft: 15 } }}
             >
               Metronome
             </Link>

@@ -27,7 +27,7 @@ export class MetronomePage extends React.Component<IProps, IState> {
   public readonly state = {
     showAdditionalInfo: false,
     tempo: 120,
-    beatsPerMeasure: 4,
+    beatsPerMeasure: 5,
   };
 
   public render() {
@@ -35,7 +35,7 @@ export class MetronomePage extends React.Component<IProps, IState> {
       <Metronome
         tempo={this.state.tempo}
         beatsPerMeasure={this.state.beatsPerMeasure}
-        render={({ onPlay, playing, beat, tempo }) => (
+        render={({ onPlay, playing, beat }) => (
           <Card elevation={Elevation.TWO}>
             <H5>
               Metronome{" "}
@@ -63,9 +63,9 @@ export class MetronomePage extends React.Component<IProps, IState> {
             <div
               style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}
             >
-              <div style={{ gridColumn: "1/2", gridRow: 1 }}>
+              <div style={{ gridColumn: "1/2", gridRow: 1, borderRight: "1px solid #888" }}>
                 <FormGroup
-                  label="BPM"
+                  label="Tempo"
                   helperText="How fast we will go"
                   labelFor="bpm-input"
                 >
@@ -74,6 +74,22 @@ export class MetronomePage extends React.Component<IProps, IState> {
                     leftIcon="time"
                     value={this.state.tempo}
                     onValueChange={val => this.setState({ tempo: val })}
+                    min={1}
+                    allowNumericCharactersOnly
+                  />
+                </FormGroup>
+
+                <FormGroup
+                  label="Beats per measure"
+                  helperText="Number of notes"
+                  labelFor="bpm-input"
+                >
+                  <NumericInput
+                    id="bpm-input"
+                    leftIcon="time"
+                    value={this.state.beatsPerMeasure}
+                    onValueChange={val => this.setState({ beatsPerMeasure: val })}
+                    min={1}
                     allowNumericCharactersOnly
                   />
                 </FormGroup>
