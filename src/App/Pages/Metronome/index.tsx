@@ -11,7 +11,7 @@ import {
   H5,
   H1,
 } from "@blueprintjs/core";
-import Metronome from "../../Components/Metronome";
+import { MetronomePlayer } from "../../Components/Metronome";
 
 interface IProps {
   path: string;
@@ -19,7 +19,7 @@ interface IProps {
 
 interface IState {
   tempo: number;
-  beatsPerMeasure: number;
+  subdivision: number;
   showAdditionalInfo: boolean;
 }
 
@@ -27,15 +27,16 @@ export class MetronomePage extends React.Component<IProps, IState> {
   public readonly state = {
     showAdditionalInfo: false,
     tempo: 120,
-    beatsPerMeasure: 5,
+    subdivision: 4,
   };
 
   public render() {
     return (
-      <Metronome
-        tempo={this.state.tempo}
-        beatsPerMeasure={this.state.beatsPerMeasure}
-        render={({ onPlay, playing, beat }) => (
+      <MetronomePlayer
+        bpm={this.state.tempo}
+        subdivision={this.state.subdivision}
+      >
+        {({ onStart, onStop, count, isPlaying }) => (
           <Card elevation={Elevation.TWO}>
             <H5>
               Metronome{" "}
@@ -63,7 +64,13 @@ export class MetronomePage extends React.Component<IProps, IState> {
             <div
               style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}
             >
-              <div style={{ gridColumn: "1/2", gridRow: 1, borderRight: "1px solid #888" }}>
+              <div
+                style={{
+                  gridColumn: "1/2",
+                  gridRow: 1,
+                  borderRight: "1px solid #888",
+                }}
+              >
                 <FormGroup
                   label="Tempo"
                   helperText="How fast we will go"
@@ -87,31 +94,44 @@ export class MetronomePage extends React.Component<IProps, IState> {
                   <NumericInput
                     id="bpm-input"
                     leftIcon="time"
-                    value={this.state.beatsPerMeasure}
-                    onValueChange={val => this.setState({ beatsPerMeasure: val })}
+                    value={this.state.subdivision}
+                    onValueChange={val => this.setState({ subdivision: val })}
                     min={1}
                     allowNumericCharactersOnly
                   />
                 </FormGroup>
 
                 <Button
-                  icon={playing ? "stop" : "play"}
-                  onClick={onPlay}
-                  intent={playing ? "danger" : "primary"}
+                  icon={isPlaying ? "stop" : "play"}
+                  onClick={isPlaying ? onStop : onStart}
+                  intent={isPlaying ? "danger" : "primary"}
                 >
-                  {playing ? "Stop" : "Start"}
+                  {isPlaying ? "Stop" : "Start"}
                 </Button>
               </div>
 
               <div
-                style={{ gridColumn: "2/2", gridRow: 1, textAlign: "center" }}
+                style={{
+                  display: "flex",
+                  gridColumn: "2/2",
+                  gridRow: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                <H1 style={beat === 1 ? { color: "#0F9960" } : {}}>{beat}</H1>
+                <H1
+                  style={{
+                    fontSize: "4rem",
+                    ...(count === 1 ? { color: "#0F9960" } : {}),
+                  }}
+                >
+                  {count}
+                </H1>
               </div>
             </div>
           </Card>
         )}
-      />
+      </MetronomePlayer>
     );
   }
 }

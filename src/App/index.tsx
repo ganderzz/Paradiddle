@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Router, Link } from "@reach/router";
 import { Navbar, Classes } from "@blueprintjs/core";
-import { FlashCards } from "./Pages/FlashCards";
 import { Homepage } from "./Pages/Homepage";
 import { MetronomePage } from "./Pages/Metronome";
 
@@ -19,9 +18,6 @@ export default class App extends React.Component {
 
             <Navbar.Divider />
 
-            <Link {...{ to: "flashcards", style: { color: "#FFF" } }}>
-              Flash Cards
-            </Link>
             <Link
               {...{ to: "metronome", style: { color: "#FFF", marginLeft: 15 } }}
             >
@@ -33,7 +29,6 @@ export default class App extends React.Component {
         <section style={{ maxWidth: "95vw", margin: "20px auto" }}>
           <Router>
             <Homepage path="/" />
-            <FlashCards path="/flashcards" />
             <MetronomePage path="/metronome" />
           </Router>
         </section>
